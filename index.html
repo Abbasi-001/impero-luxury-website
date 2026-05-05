@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IMPÉRO | Tailored for Legacy</title>
+    <style>
+        :root {
+            --bg-color: #FDFDFD;
+            --text-color: #1A1A1A;
+            --majestic-gold: #D4AF37;
+            --majestic-silver: #C0C0C0;
+            --soft-ivory: #F9F6F0;
+            --nav-bg: #ffffff;
+        }
+
+        /* DARK MODE OVERRIDE */
+        #dark-mode-toggle:checked ~ .app-content {
+            --bg-color: #0A0A0A;
+            --text-color: #FDFDFD;
+            --soft-ivory: #1A1A1A;
+            --nav-bg: #111111;
+        }
+
+        #dark-mode-toggle { display: none; }
+
+        body {
+            margin: 0;
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: 0.4s ease;
+            overflow-x: hidden;
+        }
+
+        /* NAVIGATION */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 5%;
+            background: var(--nav-bg);
+            border-bottom: 1px solid var(--soft-ivory);
+            position: fixed;
+            width: 90%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: var(--majestic-gold);
+            text-decoration: none;
+            font-weight: bold;
+            letter-spacing: 6px;
+        }
+
+        .toggle-label {
+            cursor: pointer;
+            padding: 8px 16px;
+            border: 1px solid var(--majestic-gold);
+            font-size: 10px;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: var(--majestic-gold);
+        }
+
+        /* HERO SECTION */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        .motto {
+            font-family: 'Playfair Display', serif;
+            font-size: 5.5rem; /* Massive size */
+            text-transform: uppercase;
+            letter-spacing: 15px;
+            margin-bottom: 20px;
+            font-weight: 900;
+            line-height: 1.1;
+        }
+
+        .motto .silver { color: var(--majestic-silver); }
+        .motto .gold { color: var(--majestic-gold); }
+
+        .sub-motto {
+            font-size: 1rem;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            margin-bottom: 40px;
+            opacity: 0.8;
+        }
+
+        /* CALL TO ACTION */
+        .cta-button {
+            text-decoration: none;
+            padding: 18px 45px;
+            border: 1px solid var(--majestic-gold);
+            color: var(--majestic-gold);
+            font-size: 0.9rem;
+            font-weight: bold;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            transition: 0.5s;
+            background: transparent;
+        }
+
+        .cta-button:hover {
+            background: var(--majestic-gold);
+            color: white;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+        }
+
+        /* DECORATIVE ELEMENT */
+        .gold-line {
+            width: 1px;
+            height: 100px;
+            background: var(--majestic-gold);
+            margin-top: 50px;
+        }
+
+        @media (max-width: 768px) {
+            .motto { font-size: 2.5rem; letter-spacing: 5px; }
+        }
+    </style>
+</head>
+<body>
+
+    <input type="checkbox" id="dark-mode-toggle">
+
+    <div class="app-content">
+        <nav class="navbar">
+            <a href="index.html" class="logo">IMPÉRO</a>
+            <label for="dark-mode-toggle" class="toggle-label">Toggle Dark Mode</label>
+        </nav>
+
+        <section class="hero">
+            <h1 class="motto">
+                <span class="silver">Tailored for</span><br>
+                <span class="gold">Legacy</span>
+            </h1>
+            
+            <p class="sub-motto">Est. 2026 | The Royal Archive</p>
+
+            <a href="explorer.html" class="cta-button">Enter The Archive</a>
+
+            <div class="gold-line"></div>
+        </section>
+    </div>
+
+</body>
+</html>

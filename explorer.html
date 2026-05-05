@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Royal Archive | IMPÉRO</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&family=Playfair+Display:wght@700&display=swap');
+
+        :root {
+            --bg-color: #FDFDFD;
+            --card-bg: #ffffff;
+            --text-color: #1A1A1A;
+            --majestic-gold: #D4AF37;
+            --gold-glow: rgba(212, 175, 55, 0.6); 
+            --soft-ivory: #F9F6F0;
+            --nav-bg: #ffffff;
+        }
+
+        /* DARK THEME VARIABLES */
+        body.dark-theme {
+            --bg-color: #0A0A0A;
+            --card-bg: #141414;
+            --text-color: #FDFDFD;
+            --soft-ivory: #1A1A1A;
+            --nav-bg: #111111;
+            --gold-glow: rgba(212, 175, 55, 0.9);
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: 0.4s ease;
+            overflow-x: hidden;
+        }
+
+        /* NAVIGATION BAR */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 5%;
+            background: var(--nav-bg);
+            border-bottom: 1px solid var(--soft-ivory);
+            position: sticky;
+            top: 0;
+            z-index: 1100;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: var(--majestic-gold);
+            text-decoration: none;
+            font-weight: bold;
+            letter-spacing: 6px;
+        }
+
+        .search-container { flex: 1; margin: 0 40px; max-width: 400px; }
+        .search-bar {
+            width: 100%;
+            padding: 10px;
+            background: var(--soft-ivory);
+            border: 1px solid transparent;
+            color: var(--text-color);
+            outline: none;
+            font-family: 'Montserrat';
+        }
+
+        .search-bar:focus { border-color: var(--majestic-gold); }
+
+        .nav-actions { display: flex; align-items: center; gap: 25px; }
+
+        .cart-trigger {
+            cursor: pointer;
+            position: relative;
+            font-size: 1.3rem;
+            color: var(--majestic-gold);
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -10px; right: -12px;
+            background: var(--majestic-gold);
+            color: white;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 50%;
+        }
+
+        /* MAIN LAYOUT */
+        .main-container { display: flex; width: 100%; }
+
+        /* FIXED SIDEBAR */
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            position: fixed;
+            top: 70px; left: 0;
+            padding: 40px 20px;
+            border-right: 1px solid var(--soft-ivory);
+            background: var(--nav-bg);
+            z-index: 1000;
+        }
+
+        .sidebar h3 {
+            font-family: 'Playfair Display', serif;
+            color: var(--majestic-gold);
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+
+        .filter-btn {
+            display: block; width: 100%; padding: 12px; margin-bottom: 8px;
+            background: transparent; border: 1px solid var(--soft-ivory);
+            color: var(--text-color); text-align: left; text-transform: uppercase;
+            font-size: 0.7rem; cursor: pointer; transition: 0.3s;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            border-color: var(--majestic-gold);
+            color: var(--majestic-gold);
+            padding-left: 20px;
+            background: rgba(212, 175, 55, 0.05);
+        }
+
+        /* MARKETPLACE GRID */
+        .marketplace { flex: 1; padding: 40px; margin-left: 280px; }
+        
+        .product-grid { 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 30px; 
+        }
+
+        .product-card {
+            background: var(--card-bg); 
+            padding-bottom: 20px;
+            text-align: center; 
+            cursor: pointer; 
+            border: 1px solid transparent; 
+            transition: 0.4s;
+        }
+
+        .product-card:hover { 
+            border: 1px solid var(--majestic-gold); 
+            transform: translateY(-8px);
+            box-shadow: 0 15px 45px var(--gold-glow); 
+        }
+
+        .product-image { width: 100%; height: 350px; overflow: hidden; background: var(--soft-ivory); }
+        .product-image img { width: 100%; height: 100%; object-fit: cover; }
+        .product-name { font-family: 'Playfair Display', serif; margin: 15px 0 5px; text-transform: uppercase; }
+        .price { color: var(--majestic-gold); font-weight: bold; }
+
+        /* MODALS */
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); z-index: 5000; justify-content: center; align-items: center;
+        }
+
+        .modal-content {
+            background: var(--card-bg); width: 90%; max-width: 900px;
+            display: flex; position: relative; border: 1px solid var(--majestic-gold);
+            box-shadow: 0 0 60px var(--gold-glow);
+        }
+
+        .modal-close { position: absolute; top: 20px; right: 20px; font-size: 30px; cursor: pointer; color: var(--majestic-gold); z-index: 10; }
+        .modal-left { flex: 1; height: 500px; }
+        .modal-left img { width: 100%; height: 100%; object-fit: cover; }
+        .modal-right { flex: 1; padding: 50px; display: flex; flex-direction: column; justify-content: center; }
+
+        /* BUTTONS */
+        .acquire-btn {
+            margin-top: 40px; padding: 15px;
+            background: var(--majestic-gold); color: white;
+            border: none; cursor: pointer; font-weight: bold;
+            transition: 0.3s; text-transform: uppercase;
+        }
+        .acquire-btn:hover { letter-spacing: 2px; background: #b8952d; }
+
+        /* CART SIDEBAR */
+        .cart-sidebar {
+            position: fixed; top: 0; right: -400px; width: 350px; height: 100%;
+            background: var(--nav-bg); border-left: 1px solid var(--majestic-gold);
+            z-index: 4000; transition: 0.5s; padding: 40px 25px;
+            box-shadow: -10px 0 30px rgba(0,0,0,0.5);
+            display: flex; flex-direction: column;
+        }
+        .cart-sidebar.open { right: 0; }
+        .cart-item { display: flex; gap: 15px; margin-bottom: 20px; align-items: center; border-bottom: 1px solid var(--soft-ivory); padding-bottom: 10px; }
+        .cart-item img { width: 50px; height: 70px; object-fit: cover; border: 1px solid var(--majestic-gold); }
+
+        /* FORM INPUTS */
+        .checkout-input {
+            width: 100%; padding: 12px; margin-bottom: 15px; 
+            background: var(--soft-ivory); border: 1px solid transparent; 
+            color: var(--text-color); font-family: 'Montserrat';
+        }
+
+        @media (max-width: 1000px) { 
+            .product-grid { grid-template-columns: repeat(2, 1fr); } 
+            .sidebar { display: none; } 
+            .marketplace { margin-left: 0; } 
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="#" class="logo">IMPÉRO</a>
+        <div class="search-container">
+            <input type="text" class="search-bar" id="searchInput" placeholder="Search the archive..." onkeyup="searchProducts()">
+        </div>
+        <div class="nav-actions">
+            <button onclick="toggleTheme()" style="background:none; border:1px solid var(--majestic-gold); color:var(--majestic-gold); cursor:pointer; padding:5px 12px; font-size: 1.2rem;">
+                <span id="themeIcon">🌙</span>
+            </button>
+            <div class="cart-trigger" onclick="toggleCart()">
+                👜 <span class="cart-count" id="cartCount">0</span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <aside class="sidebar">
+            <h3>Collections</h3>
+            <button class="filter-btn active" onclick="filterItems('all')">View All</button>
+            <button class="filter-btn" onclick="filterItems('new')">New Arrivals</button>
+            <button class="filter-btn" onclick="filterItems('bespoke')">Imperial Bespoke</button>
+            <button class="filter-btn" onclick="filterItems('silk')">Royal Silk</button>
+        </aside>
+
+        <main class="marketplace">
+            <div class="product-grid" id="productGrid"></div>
+        </main>
+    </div>
+
+    <div id="cartSidebar" class="cart-sidebar">
+        <h2 style="font-family:'Playfair Display'; border-bottom:1px solid var(--majestic-gold); padding-bottom:15px;">Imperial Bag</h2>
+        <div id="cartItems" style="flex:1; overflow-y:auto; margin-top:20px;"></div>
+        <div style="margin-top:auto; border-top:1px solid var(--soft-ivory); padding-top:20px;">
+            <p style="font-size: 1.2rem;">Total: <span id="cartTotal" class="price">Rs. 0</span></p>
+            <button onclick="openCheckout()" class="acquire-btn" style="width:100%;">Finalize Acquisition</button>
+            <button onclick="toggleCart()" style="width:100%; margin-top:10px; background:none; border:none; color:var(--text-color); cursor:pointer;">Close</button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="productModal" onclick="closeModal()">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <span class="modal-close" onclick="closeModal()">&times;</span>
+            <div class="modal-left"><img id="modalImg" src=""></div>
+            <div class="modal-right">
+                <h2 id="modalTitle" style="font-family:'Playfair Display';"></h2>
+                <p id="modalPrice" class="price" style="font-size: 1.5rem;"></p>
+                <p id="modalDesc" style="margin-top:20px; line-height:1.6;"></p>
+                <button id="addBtn" class="acquire-btn">Acquire Piece</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="checkoutModal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 500px; flex-direction: column; padding: 40px;">
+            <span class="modal-close" onclick="closeCheckout()">&times;</span>
+            <h2 style="font-family:'Playfair Display'; color:var(--majestic-gold); margin-bottom: 20px;">Imperial Details</h2>
+            
+            <input type="text" id="userName" class="checkout-input" placeholder="Full Name">
+            <input type="text" id="userAddress" class="checkout-input" placeholder="Delivery Address">
+            
+            <div style="display: flex; gap: 10px;">
+                <input type="number" id="userAge" class="checkout-input" placeholder="Age" style="flex: 1;">
+                <select id="userGender" class="checkout-input" style="flex: 1;">
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+            
+            <button onclick="sendOrderEmail()" class="acquire-btn">Submit Order</button>
+        </div>
+    </div>
+
+    <script>
+        // DATA LAYER
+        const products = [
+            { id: 1, name: "Imperial Ivory Gown", price: 85000, cat: "new", img: "download (1).jpg", desc: "Alabaster silk finish. Pure royal elegance." },
+            { id: 2, name: "Golden Thread Blazer", price: 62000, cat: "bespoke", img: "download (2).jpg", desc: "Hand-stitched gold leaf threading." },
+            { id: 3, name: "Majestic Silk Wrap", price: 24500, cat: "silk", img: "download (3).jpg", desc: "Finest silks of the eastern provinces." },
+            { id: 4, name: "Sovereign Suit", price: 110000, cat: "bespoke", img: "images.jpg", desc: "Midnight black wool with silk lapels." },
+            { id: 5, name: "Palace Cape", price: 38000, cat: "new", img: "download (1).jpg", desc: "Heavy velvet designed for formal evenings." },
+            { id: 6, name: "Evening Empress Dress", price: 72000, cat: "new", img: "download (2).jpg", desc: "Deep crimson hues with a trailing train." },
+            { id: 7, name: "Royal Silk Trousers", price: 15000, cat: "silk", img: "download (3).jpg", desc: "Breathable luxury silk tailoring." },
+            { id: 8, name: "Gilded Evening Shirt", price: 22500, cat: "bespoke", img: "download.jpg", desc: "Hidden buttons and a subtle gold sheen." },
+            { id: 9, name: "Monarch Scarf", price: 8900, cat: "silk", img: "download (1).jpg", desc: "Hand-painted imperial patterns." },
+            { id: 10, name: "Noble Waistcoat", price: 31000, cat: "bespoke", img: "download (2).jpg", desc: "Ivory vest with antique brass buttons." },
+            { id: 11, name: "Aristocrat Tie", price: 6500, cat: "silk", img: "download (3).jpg", desc: "Heavy silk with diamond-weave texture." },
+            { id: 12, name: "Dynasty Cloak", price: 89000, cat: "new", img: "download.jpg", desc: "Fur-lined collar and waterproof silk." }
+        ];
+
+        let cart = [];
+        let activeCategory = 'all';
+
+        // RENDER PRODUCTS
+        function renderProducts(items) {
+            const grid = document.getElementById('productGrid');
+            grid.innerHTML = '';
+            items.forEach(p => {
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.onclick = () => openProductModal(p);
+                card.innerHTML = `
+                    <div class="product-image"><img src="${p.img}" onerror="this.src='https://via.placeholder.com/400x600?text=Imperial+Piece'"></div>
+                    <h3 class="product-name">${p.name}</h3>
+                    <p class="price">Rs. ${p.price.toLocaleString()}</p>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // FILTER & SEARCH
+        function filterItems(category) {
+            activeCategory = category;
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            searchProducts();
+        }
+
+        function searchProducts() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = products.filter(p => {
+                const matchesCat = (activeCategory === 'all' || p.cat === activeCategory);
+                const matchesSearch = p.name.toLowerCase().includes(query);
+                return matchesCat && matchesSearch;
+            });
+            renderProducts(filtered);
+        }
+
+        // MODAL LOGIC
+        function openProductModal(p) {
+            document.getElementById('modalImg').src = p.img;
+            document.getElementById('modalTitle').innerText = p.name;
+            document.getElementById('modalPrice').innerText = "Rs. " + p.price.toLocaleString();
+            document.getElementById('modalDesc').innerText = p.desc;
+            document.getElementById('addBtn').onclick = () => addToCart(p);
+            document.getElementById('productModal').style.display = 'flex';
+        }
+
+        function closeModal() { document.getElementById('productModal').style.display = 'none'; }
+
+        // CART LOGIC
+        function addToCart(p) {
+            cart.push(p);
+            updateCartUI();
+            closeModal();
+            toggleCart(true);
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            document.getElementById('cartCount').innerText = cart.length;
+            const container = document.getElementById('cartItems');
+            container.innerHTML = '';
+            let total = 0;
+
+            cart.forEach((item, index) => {
+                total += item.price;
+                container.innerHTML += `
+                    <div class="cart-item">
+                        <img src="${item.img}">
+                        <div style="flex:1;">
+                            <div style="font-weight:bold; font-size:0.8rem;">${item.name}</div>
+                            <div class="price">Rs. ${item.price.toLocaleString()}</div>
+                        </div>
+                        <span onclick="removeFromCart(${index})" style="cursor:pointer; color:red; font-size:12px;">&times;</span>
+                    </div>
+                `;
+            });
+            document.getElementById('cartTotal').innerText = "Rs. " + total.toLocaleString();
+        }
+
+        function toggleCart(open = null) {
+            const sidebar = document.getElementById('cartSidebar');
+            if(open === true) sidebar.classList.add('open');
+            else if(open === false) sidebar.classList.remove('open');
+            else sidebar.classList.toggle('open');
+        }
+
+        // CHECKOUT LOGIC
+        function openCheckout() {
+            if(cart.length === 0) return alert("Your bag is currently empty.");
+            document.getElementById('checkoutModal').style.display = 'flex';
+        }
+
+        function closeCheckout() { document.getElementById('checkoutModal').style.display = 'none'; }
+
+        function sendOrderEmail() {
+            const name = document.getElementById('userName').value;
+            const addr = document.getElementById('userAddress').value;
+            const age = document.getElementById('userAge').value;
+            const gen = document.getElementById('userGender').value;
+
+            if(!name || !addr || !age) return alert("The Archive requires all details.");
+
+            const cartString = cart.map(i => `- ${i.name} (Rs. ${i.price})`).join('\n');
+            const total = document.getElementById('cartTotal').innerText;
+
+            const subject = encodeURIComponent("New Imperial Order: " + name);
+            const body = encodeURIComponent(
+                `Customer: ${name}\nAge: ${age}\nGender: ${gen}\nAddress: ${addr}\n\nItems:\n${cartString}\n\nTOTAL: ${total}`
+            );
+
+            // REPLACE WITH YOUR ACTUAL EMAIL
+            window.location.href = `mailto:admin@impero.com?subject=${subject}&body=${body}`;
+            
+            alert("Order bundled. Redirecting to your mail client...");
+            cart = [];
+            updateCartUI();
+            closeCheckout();
+            toggleCart(false);
+        }
+
+        // THEME TOGGLE
+        function toggleTheme() {
+            document.body.classList.toggle('dark-theme');
+            const isDark = document.body.classList.contains('dark-theme');
+            document.getElementById('themeIcon').innerText = isDark ? '☀️' : '🌙';
+        }
+
+        // INIT
+        renderProducts(products);
+    </script>
+</body>
+</html>
